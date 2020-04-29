@@ -12,6 +12,7 @@ public class Board {
     public Map<Integer,Piece> pieces = new HashMap<>();
     public Piece selected_piece;
     public int player = 0;
+    public int winner = -1; // 0 for red, 1 for black, -1 for not yet
 
     //init
     public Board(){
@@ -88,6 +89,10 @@ public class Board {
     public void remove(int x,int y){
         int pos = Common.encoder(x, y);
         try{
+            if(pieces.get(pos)!=null){
+                if(pieces.get(pos).getClass()==Shuai.class)
+                    winner = pieces.get(pos).color ^ 1; 
+            }
             pieces.remove(pos);
         } catch(Exception e){
             System.out.println("Error in removing a piece");

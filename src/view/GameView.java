@@ -19,7 +19,11 @@ public class GameView{
     private Board board;
     private JFrame frame;
     private JLayeredPane pane;
+    private JLabel lblPlayer;
     public void draw_board(Board board){
+        // exit if already has a winner
+        if (board.winner!=-1)
+            showWinner(board.winner);
         // draw the board background
         this.board = board;
         frame = new JFrame("Chinese Chess");
@@ -36,6 +40,17 @@ public class GameView{
         bgBoard.setSize(VIEW_WIDTH, VIEW_HEIGHT);
         bgBoard.addMouseListener(new BoardClickListener());
         pane.add(bgBoard, 1);
+
+        /* Initialize player image.*/
+        String playerImgPath;
+        if(board.player==0)
+            playerImgPath = "img/r.png";
+        else
+            playerImgPath = "img/b.png";
+        lblPlayer = new JLabel(new ImageIcon(playerImgPath));
+        lblPlayer.setLocation(10, 320);
+        lblPlayer.setSize(PIECE_WIDTH, PIECE_HEIGHT);
+        pane.add(lblPlayer, 0);
 
         Map<Integer,Piece> pieces = board.pieces;
         for (Map.Entry<Integer, Piece> PieceEntry : pieces.entrySet()) {
@@ -68,6 +83,11 @@ public class GameView{
         int ADDITIONAL_SY_OFFSET = 25;
         int y = (sPos[0] - SX_OFFSET) / SX_COE, x = (sPos[1] - SY_OFFSET - ADDITIONAL_SY_OFFSET) / SY_COE;
         return new int[]{x, y};
+    }
+
+    public void showWinner(int winner) {
+        JOptionPane.showMessageDialog(null, (winner == 0) ? "Red player has won!" : "Black player has won!", "Chinese Chess", JOptionPane.INFORMATION_MESSAGE);
+        System.exit(0);
     }
 
     class PieceOnClickListener extends MouseAdapter {
