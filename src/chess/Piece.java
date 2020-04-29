@@ -1,5 +1,8 @@
 package chess;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import chess.Board;
 import chess.Common;
 
@@ -13,11 +16,23 @@ abstract public class Piece {
         this.color = color;
     }
     
-    abstract public void move(int dx, int dy, Board board);
+    public boolean move(int dx, int dy, Board board){
+        List<Integer> canMoves = getMoveLocations(x, y, board);
+        int pos = Common.encoder(dx, dy);
+        if(!canMoves.contains(pos))
+            return false;
+        board.remove(x, y);
+        this.x = dx;
+        this.y = dy;
+        // eat
+        board.remove(dx, dy);
+        board.pieces.put(Common.encoder(x, y), this);
+        return true;
+    };
 
     abstract public String get_img();
 
-    abstract public int[] getMoveLocations(int x,int y, Board board);
+    abstract public List<Integer> getMoveLocations(int x,int y, Board board);
 
 }
 

@@ -11,6 +11,7 @@ public class Board {
 
     public Map<Integer,Piece> pieces = new HashMap<>();
     public Piece selected_piece;
+    public int player = 0;
 
     //init
     public Board(){
@@ -68,14 +69,21 @@ public class Board {
         // if there is no selected piece
         if(selected_piece==null)
             return;
-        else{
-            try{
-                selected_piece.move(dx,dy,this);
-            } catch(Exception e){
-                System.out.println("Error when moving a piece");
-            }        
-            selected_piece = null; // after move, unselect
-        }
+        boolean moveSuccess = false;
+       
+        try{
+            moveSuccess = selected_piece.move(dx,dy,this);
+        } catch(Exception e){
+            System.out.println("Error when moving a piece");
+        } 
+
+        // after move successfully, unselect
+        if(moveSuccess){
+            selected_piece = null; 
+            player = player^1;
+        }     
+            
+        
     }
     public void remove(int x,int y){
         int pos = Common.encoder(x, y);
@@ -92,6 +100,12 @@ public class Board {
             selected_piece = pieces.get(key);
             System.out.println(selected_piece);
         }
+    }
+
+    public int getColor(int x,int y){
+        if(pieces.get(Common.encoder(x, y))==null)
+            return -1;
+        return pieces.get(Common.encoder(x, y)).color;
     }
     
 }

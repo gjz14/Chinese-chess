@@ -79,7 +79,14 @@ public class GameView{
         public void mousePressed(MouseEvent e) {        
                 int x = board.pieces.get(pos).x;
                 int y = board.pieces.get(pos).y;
-                board.select(x, y);       
+                // only reselect a piece with the same color
+                if(board.getColor(x, y)==board.player)
+                    board.select(x, y);  
+                // otherwise do move
+                else{
+                    board.move(x, y);
+                    draw_board(board);
+                }     
         }
     }
 
