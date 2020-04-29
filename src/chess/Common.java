@@ -10,4 +10,9 @@ public class Common {
     public static int encoder(int x,int y){
         return x*9+y;
     }
+    public static boolean isInBoard(int x,int y){
+        if(x>=0 && x<10 && y>=0 && y<9)
+            return true;
+        return false;
+    }
 }

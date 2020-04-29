@@ -21,11 +21,13 @@ abstract public class Piece {
         int pos = Common.encoder(dx, dy);
         if(!canMoves.contains(pos))
             return false;
+        // reomve the piece from its original position
         board.remove(x, y);
         this.x = dx;
         this.y = dy;
         // eat
         board.remove(dx, dy);
+        // move to the destination
         board.pieces.put(Common.encoder(x, y), this);
         return true;
     };

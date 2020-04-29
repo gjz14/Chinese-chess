@@ -103,6 +103,7 @@ public class Board {
     }
 
     public int getColor(int x,int y){
+        // return -1 if the pos is empty 
         if(pieces.get(Common.encoder(x, y))==null)
             return -1;
         return pieces.get(Common.encoder(x, y)).color;
