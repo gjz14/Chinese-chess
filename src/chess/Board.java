@@ -66,6 +66,21 @@ public class Board {
 
     }
 
+    public void checkWinner(){
+        int[] flag = new int[]{0,0};
+        for(Piece p: pieces.values()){
+            if(p.getClass()==Shuai.class){
+                flag[p.color] = 1;
+            }
+        }
+        if(flag[0]==1 && flag[1]==1)
+            winner = -1;
+        else if(flag[0]==0)
+            winner = 1;
+        else
+            winner = 0;
+    }
+
     public void move(int dx, int dy){
         // if there is no selected piece
         if(selected_piece==null)
@@ -82,6 +97,7 @@ public class Board {
         if(moveSuccess){
             selected_piece = null; 
             player = player^1;
+            checkWinner();
         }     
             
         
@@ -89,10 +105,6 @@ public class Board {
     public void remove(int x,int y){
         int pos = Common.encoder(x, y);
         try{
-            if(pieces.get(pos)!=null){
-                if(pieces.get(pos).getClass()==Shuai.class)
-                    winner = pieces.get(pos).color ^ 1; 
-            }
             pieces.remove(pos);
         } catch(Exception e){
             System.out.println("Error in removing a piece");

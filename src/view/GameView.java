@@ -31,33 +31,19 @@ public class GameView{
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         pane = new JLayeredPane();
         frame.add(pane);
+
         /* Initialize chess board and listeners on each slot.*/
         JLabel bgBoard = new JLabel(new ImageIcon("img/board.png"));
         bgBoard.setLocation(0, 0);
         bgBoard.setSize(VIEW_WIDTH, VIEW_HEIGHT);
         bgBoard.addMouseListener(new BoardClickListener());
         pane.add(bgBoard, 1);
-        // Initialize player image
-        lblPlayer = new JLabel(new ImageIcon("img/r.png"));
-        lblPlayer.setLocation(10, 320);
-        lblPlayer.setSize(PIECE_WIDTH, PIECE_HEIGHT);
-        pane.add(lblPlayer, 0);
-        
+
+        // Initialize player image  
+        addPlayer(board);
         
         // draw pieces
-        Map<Integer,Piece> pieces = board.pieces;
-        for (Map.Entry<Integer, Piece> PieceEntry : pieces.entrySet()) {
-            int pos = PieceEntry.getKey();
-            String image= PieceEntry.getValue().get_img();
-            JLabel lblPiece = new JLabel(new ImageIcon(image));
-            int []viewpos = modelToViewConverter(Common.decoder(pos));
-            lblPiece.setLocation(viewpos[0],viewpos[1]);
-            lblPiece.setSize(PIECE_WIDTH, PIECE_HEIGHT);
-            lblPiece.addMouseListener(new PieceOnClickListener(pos));
-            pieceObjects.put(pos, lblPiece);
-            pane.add(lblPiece, 0);
-        }
-
+        addPieces(board);
 
         frame.setVisible(true);
     }
@@ -69,10 +55,21 @@ public class GameView{
             pane.remove(j);
         pieceObjects.clear();
 
+        // draw player
+        addPlayer(board);
+
+        // draw pieces
+        addPieces(board);
+        pane.validate();
+        pane.repaint();
+
         // exit if already has a winner
         if (board.winner!=-1)
-            showWinner(board.winner);
+        showWinner(board.winner);
+        
+    }
 
+    private void addPlayer(Board board){
         /* draw player image.*/
         String playerImgPath;
         if(board.player==0)
@@ -83,8 +80,9 @@ public class GameView{
         lblPlayer.setLocation(10, 320);
         lblPlayer.setSize(PIECE_WIDTH, PIECE_HEIGHT);
         pane.add(lblPlayer, 0);
+    }
 
-        // draw pieces
+    private void addPieces(Board board){
         Map<Integer,Piece> pieces = board.pieces;
         for (Map.Entry<Integer, Piece> PieceEntry : pieces.entrySet()) {
             int pos = PieceEntry.getKey();
@@ -97,12 +95,7 @@ public class GameView{
             pieceObjects.put(pos, lblPiece);
             pane.add(lblPiece, 0);
         }
-        pane.validate();
-        pane.repaint();
-        
     }
-
-
 
     private int[] modelToViewConverter(int pos[]) {
         int sx = pos[1] * SX_COE + SX_OFFSET, sy = pos[0] * SY_COE + SY_OFFSET;
