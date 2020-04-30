@@ -5,6 +5,7 @@ import java.util.List;
 
 import chess.Board;
 import chess.Common;
+import chess.chessman.Shuai;
 
 abstract public class Piece {
     public int x;
@@ -15,11 +16,24 @@ abstract public class Piece {
         this.y = y;
         this.color = color;
     }
+
+    public boolean canMoveWithoutFaceKing(int x, int y, Board board){
+        int upx = x-1, downx = 1+x;
+        while(Common.isInBoard(upx, y) && board.getColor(upx, y)==-1)
+            upx--;
+        while(Common.isInBoard(downx, y) && board.getColor(downx, y)==-1)
+            downx++;
+        if(Common.isInBoard(upx, y) && Common.isInBoard(downx, y)){
+            if(board.pieces.get(Common.encoder(upx, y)).getClass() == Shuai.class && board.pieces.get(Common.encoder(downx, y)).getClass() == Shuai.class)
+                return false;
+        }
+        return true;
+    }
     
     public boolean move(int dx, int dy, Board board){
         List<Integer> canMoves = getMoveLocations(x, y, board);
         int pos = Common.encoder(dx, dy);
-        if(!canMoves.contains(pos))
+        if(!canMoves.contains(pos) || !canMoveWithoutFaceKing(x,y,board))
             return false;
         // reomve the piece from its original position
         board.remove(x, y);
