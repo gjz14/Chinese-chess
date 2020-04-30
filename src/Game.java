@@ -6,18 +6,13 @@ public class Game {
     private GameView view;
     public static void main(final String[] args) {
         final Game game = new Game();
-        game.init();
         game.run();
     }
 
-    public void init() {
+    public void run() {
         final GameView view = new GameView();
         final Board board = new Board();
-        view.draw_board(board);
-    }
-    
-    public void run(){
-
+        view.init_board(board);
     }
 
 }
